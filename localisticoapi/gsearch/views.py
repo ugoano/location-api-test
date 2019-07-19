@@ -1,5 +1,8 @@
 from django.http import JsonResponse
 
+from localistico.location import resolve_location
+
 
 def index(request):
-    return JsonResponse({'foo': 'bar'})
+    resp = resolve_location("My Old Dutch")
+    return JsonResponse(resp)
