@@ -1,8 +1,9 @@
 import requests
 
 
-APIKEY = 'AIzaSyBDHCARiAh9_LTmreNg74pD_wZF4iyQezU'
-stub_url = 'https://maps.googleapis.com/maps/api/place/textsearch/json?{}'
+APIKEY = 'AIzaSyDEy58qwyPvic8sF5vlqOFFNZDgqmlS4Qw'
+places_search_stub_url = 'https://maps.googleapis.com/maps/api/place/textsearch/json?{}'
+places_detail_stub_url = 'https://maps.googleapis.com/maps/api/place/details/json?{}'
 
 
 class APIError(Exception):
@@ -16,24 +17,41 @@ class Location:
         self.longitude = longitude
 
 
-def resolve_location(name:str, location:Location=None):
-    params = "query={}".format(name)
+def google_places_search(query, location):
+    params = "query={}&key={}".format(query, APIKEY)
     if location:
         params += "&location={},{}".format(location.latitude, location.longitude)
-    url = stub_url.format(params)
-    resp = requests.get(url)
-    if resp.status_code >= 200 and resp.status_code < 300:
-        rjson = resp.json()
-        if rjson['status'] == "OK":
-            return {
-                'name': rjson['results'][0]['name'],
-                'place_id': rjson['results'][0]['id'],
-                'international_phone_number': rjson['results'][0],
-            }
-        else:
-            if "error_message" in rjson:
-                raise APIError("Error in Google response: {}".format(rjson['error_message']))
-            else:
-                raise APIError(rjson['status'])
-    else:
-        raise APIError("HTTP return code {}".format(resp.status_code))
+    url = places_search_stub_url.format(params)
+    return validate_response(requests.get(url))
+
+
+def google_places_detail(place_id):
+    params = "placeid={}&key={}".format(place_id, APIKEY)
+    url = places_detail_stub_url.format(params)
+    return validate_response(requests.get(url))
+
+
+def validate_response(response):
+    if response.status_code < 200 or response.status_code >= 300:
+        raise APIError("HTTP return code {}".format(response.status_code))
+    rjson = response.json()
+    if rjson['status'] != "OK":
+        error_message = "Error in Google response: {}"
+        raise APIError(error_message.format(rjson.get('error_message', rjson['status'])))
+    return rjson
+
+
+def resolve_location(name:str, location:Location=None):
+    search_resp = google_places_search(name, location)
+
+    # Assuming the first result is the best
+    place_detail_resp = google_places_detail(search_resp['results'][0]['place_id'])
+
+    # Again, assuming the first result is the best
+    place_detail = place_detail_resp[0]
+
+    return {
+        'name': place_detail['name'],
+        'place_id': place_detail['id'],
+        'international_phone_number': place_detail['international_phone_number'],
+    }
