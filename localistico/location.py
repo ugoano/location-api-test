@@ -10,6 +10,10 @@ class APIError(Exception):
     pass
 
 
+class SearchError(Exception):
+    pass
+
+
 class Location:
 
     def __init__(self, *, latitude:float, longitude:float):
@@ -37,7 +41,8 @@ def validate_response(response):
     rjson = response.json()
     if rjson['status'] != "OK":
         error_message = "Error in Google response: {}"
-        raise APIError(error_message.format(rjson.get('error_message', rjson['status'])))
+        raise SearchError(
+            error_message.format(rjson.get('error_message', rjson['status'])))
     return rjson
 
 
@@ -45,7 +50,8 @@ def resolve_location(name:str, location:Location=None):
     search_resp = google_places_search(name, location)
 
     # Assuming the first result is the best
-    place_detail_resp = google_places_detail(search_resp['results'][0]['place_id'])
+    place_detail_resp = google_places_detail(
+        search_resp['results'][0]['place_id'])
 
     # Again, assuming the first result is the best
     place_detail = place_detail_resp['result']
