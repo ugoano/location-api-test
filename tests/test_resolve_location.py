@@ -39,10 +39,11 @@ def test_resolve_location(mock_places_search, mock_places_detail):
     }
 
 
-def test_resolve_location_error(mock_places_search, mock_places_detail):
+def test_resolve_location_error():
     # Arrange
-    name = "Daily Bugle"
+    name = "Supercalafragelisticexplialidocious"
     location = Location(latitude=51.012312, longitude=0.082123)
+
 
     # Act Assert
     with pytest.raises(APIError):
