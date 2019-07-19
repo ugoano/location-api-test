@@ -15,12 +15,27 @@ def mock_places_search():
 @pytest.fixture
 def mock_places_detail():
     with mock.patch.object(location, "google_places_detail") as _places_detail:
-        _places_detail.return_value = {'results': [{
+        _places_detail.return_value = {'result': {
             'name': "Stark Industries",
             'id': "abc123",
             'international_phone_number': "+44 1234 567 890",
-        }]}
+        }}
         yield _places_detail
+
+
+def test_resolve_location_online():
+    # Arrange
+    name = "Localistico"
+
+    # Act
+    place = resolve_location(name=name)
+
+    # Assert
+    assert place == {
+        'name': "Localistico",
+        'place_id': "bc1ae69dbba7e2c983fd02d2f9a44b3ed33a76b1",
+        'international_phone_number': "+44 20 3808 1169",
+    }
 
 
 def test_resolve_location(mock_places_search, mock_places_detail):

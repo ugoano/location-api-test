@@ -48,7 +48,7 @@ def resolve_location(name:str, location:Location=None):
     place_detail_resp = google_places_detail(search_resp['results'][0]['place_id'])
 
     # Again, assuming the first result is the best
-    place_detail = place_detail_resp['results'][0]
+    place_detail = place_detail_resp['result']
 
     return {
         'name': place_detail['name'],
