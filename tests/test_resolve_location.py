@@ -1,6 +1,6 @@
 import pytest
 
-from location import resolve_location, Location, APIError
+from localistico.location import resolve_location, Location, APIError
 
 
 def test_resolve_location():
@@ -17,6 +17,7 @@ def test_resolve_location():
         "place_id": "abc123",
         "international_phone_number": "+44 1234 567 890",
     }
+
 
 def test_resolve_location_error():
     # Arrange
