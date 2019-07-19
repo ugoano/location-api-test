@@ -2,7 +2,7 @@ import pytest
 from unittest import mock
 
 from localistico import location
-from localistico.location import resolve_location, Location, APIError
+from localistico.location import resolve_location, Location, SearchError
 
 
 @pytest.yield_fixture
@@ -61,5 +61,5 @@ def test_resolve_location_error():
 
 
     # Act Assert
-    with pytest.raises(APIError):
+    with pytest.raises(SearchError):
         assert resolve_location(name, location)
