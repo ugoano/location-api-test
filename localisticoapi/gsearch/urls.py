@@ -4,5 +4,6 @@ from . import views
 
 
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('', views.sync_index, name='sync_index'),
+    path('async/', views.async_index, name='async_index'),
 ]
