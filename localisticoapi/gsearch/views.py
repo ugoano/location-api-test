@@ -28,7 +28,7 @@ def send_404(errors):
 def prepare_location_query(params):
     location_query = None
     if "latitude" in params and "longitude" in params:
-        location_query = Location(
+        location_query = dict(
             latitude=params['latitude'],
             longitude=params['longitude'])
     return location_query
@@ -38,8 +38,9 @@ def sync_index(request):
     gsearch_query = GSearchSerializer(data=request.GET)
     if not gsearch_query.is_valid():
         return send_404(gsearch_query.errors)
+
     query = request.GET['query']
-    location_query = prepare_location_query(request.GET)
+    location_query = Location(**prepare_location_query(request.GET))
 
     try:
         resp = resolve_location(name=query, location=location_query)
@@ -55,11 +56,12 @@ def async_index(request):
 
     query = request.GET['query']
     callback_url = request.GET['callback_url']
-    location_query = prepare_location_query(request.GET)
+    location_dict = prepare_location_query(request.GET)
 
     try:
         search_task = resolve_location_async.delay(
-            callback_url=callback_url, name=query, location=location_query)
+            callback_url=callback_url, name=query,
+            location=location_dict)
         response = {'task_id': search_task.id}
     except Exception as task_error:
         response = {'error': str(task_error)}
