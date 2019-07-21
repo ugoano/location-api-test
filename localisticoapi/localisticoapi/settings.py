@@ -12,6 +12,13 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
+# REDIS settings
+REDIS_HOST = "localhost"
+REDIS_PORT = "6379"
+BROKER_URL = "redis://{}:{}/0".format(REDIS_HOST, REDIS_PORT)
+BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
+CELERY_RESULT_BACKEND = BROKER_URL
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
