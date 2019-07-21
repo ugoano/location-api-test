@@ -2,6 +2,8 @@
 
 ## Start the web server
 
+Install redis-server either from `docker` or with `apt-get install`
+
 Change directory to `localisticoapi/`
 
 ```
