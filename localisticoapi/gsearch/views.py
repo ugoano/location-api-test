@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from rest_framework import serializers, status
 
 from localistico.location import Location, resolve_location, SearchError
+from .tasks import add
 
 
 class GSearchSerializer(serializers.Serializer):
@@ -11,6 +12,7 @@ class GSearchSerializer(serializers.Serializer):
 
 
 def index(request):
+    add.delay(3, 4)
     gsearch_query = GSearchSerializer(data=request.GET)
     if not gsearch_query.is_valid():
         return JsonResponse(dict(
