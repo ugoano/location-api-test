@@ -40,7 +40,8 @@ def sync_index(request):
         return send_404(gsearch_query.errors)
 
     query = request.GET['query']
-    location_query = Location(**prepare_location_query(request.GET))
+    location_dict = prepare_location_query(request.GET)
+    location_query = Location(**location_dict) if location_dict else None
 
     try:
         resp = resolve_location(name=query, location=location_query)
