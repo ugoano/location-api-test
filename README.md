@@ -8,6 +8,12 @@
 docker run --name my-redis -d redis
 ```
 
+* Monitor `callback_url` on `http://localhost:8081` in a separate terminal:
+
+```
+./callback_listener.sh
+```
+
 * Change directory to `localisticoapi/`
 
 ```
