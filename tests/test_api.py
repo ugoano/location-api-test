@@ -54,8 +54,16 @@ def test_async_gsearch_no_query():
     assert resp.status_code == 404
 
 
-def test_async_gsearch():
-    async_url = "{}/async/?query=Localistico&callback_url=someurl".format(SERVER_URL)
+def test_async_gsearch_invalid_url():
+    async_url = "{}/async/?query=Localistico&callback_url=someurl".format(
+        SERVER_URL)
     resp = requests.get(async_url)
-    assert resp.status_code == 200
+    assert resp.status_code == 404
+
+
+def test_async_gsearch():
+    async_url = "{}/async/?query=Localistico&callback_url=http://someurl.com".format(
+        SERVER_URL)
+    resp = requests.get(async_url)
     assert 'task_id' in resp.json()
+    assert resp.status_code == 200

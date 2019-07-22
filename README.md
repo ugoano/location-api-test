@@ -43,3 +43,26 @@ Change to the same directory of this README
 python setup.py develop
 pytest tests/
 ```
+
+## Using the API
+
+In order to see the code differences in the final two questions, I created a new endpoint for the async call.  The URLs are as follows for synchronous gsearch and asynchronous gsearch respectively:
+
+```
+http://localhost:8000/gsearch/?params
+```
+
+Parameters:
+query (required)
+latitude (optional)
+longitude (optional)
+
+```
+http://localhost:8000/gsearch/async/?params
+```
+
+Parameters:
+query (required)
+callback_url (required)
+latitude (optional)
+longitude (optional)

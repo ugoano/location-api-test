@@ -11,11 +11,8 @@ class GSearchSerializer(serializers.Serializer):
     longitude = serializers.FloatField(required=False)
 
 
-class AsyncGSearchSerializer(serializers.Serializer):
-    callback_url = serializers.CharField()
-    query = serializers.CharField(max_length=20)
-    latitude = serializers.FloatField(required=False)
-    longitude = serializers.FloatField(required=False)
+class AsyncGSearchSerializer(GSearchSerializer):
+    callback_url = serializers.URLField()
 
 
 def send_404(errors):
@@ -35,6 +32,7 @@ def prepare_location_query(params):
 
 
 def sync_index(request):
+    """Synchronous gsearch request."""
     gsearch_query = GSearchSerializer(data=request.GET)
     if not gsearch_query.is_valid():
         return send_404(gsearch_query.errors)
@@ -51,6 +49,7 @@ def sync_index(request):
 
 
 def async_index(request):
+    """Asynchronous gsearch request."""
     gsearch_query = AsyncGSearchSerializer(data=request.GET)
     if not gsearch_query.is_valid():
         return send_404(gsearch_query.errors)
