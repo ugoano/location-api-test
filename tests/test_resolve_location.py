@@ -2,7 +2,11 @@ import pytest
 from unittest import mock
 
 from localistico import location
-from localistico.location import resolve_location, Location, SearchError
+from localistico.location import (
+    resolve_location, Location, SearchError,
+    google_places_search, places_search_stub_url,
+    google_places_detail, places_detail_stub_url,
+)
 
 
 @pytest.yield_fixture
@@ -12,7 +16,7 @@ def mock_places_search():
         yield _places_search
 
 
-@pytest.fixture
+@pytest.yield_fixture
 def mock_places_detail():
     with mock.patch.object(location, "google_places_detail") as _places_detail:
         _places_detail.return_value = {'result': {
@@ -21,6 +25,43 @@ def mock_places_detail():
             'international_phone_number': "+44 1234 567 890",
         }}
         yield _places_detail
+
+
+@pytest.fixture
+def mock_requests():
+    with mock.patch.object(location, "requests") as _requests:
+        response = mock.Mock()
+        response.status_code = 200
+        response.json.return_value = {'status': "OK"}
+        _requests.get.return_value = response
+        yield _requests
+
+
+def test_google_places_search(mock_requests):
+    # Arrange
+    query = "Localistico"
+    location = None
+    expected_url = places_search_stub_url.format(
+        "query=Localistico&key=AIzaSyDEy58qwyPvic8sF5vlqOFFNZDgqmlS4Qw")
+
+    # Act
+    google_places_search(query, location)
+
+    # Assert
+    mock_requests.get.assert_called_once_with(expected_url)
+
+
+def test_google_places_detail(mock_requests):
+    # Arrange
+    place_id = "abcd"
+    expected_url = places_detail_stub_url.format(
+        "placeid=abcd&key=AIzaSyDEy58qwyPvic8sF5vlqOFFNZDgqmlS4Qw")
+
+    # Act
+    google_places_detail(place_id)
+
+    # Assert
+    mock_requests.get.assert_called_once_with(expected_url)
 
 
 def test_resolve_location_online():
