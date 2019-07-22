@@ -40,3 +40,21 @@ def test_gsearch_query_and_location():
         'place_id': "2cc0742e2693d3d1ce4774f36d62e352bfcd948d",
         'international_phone_number': "+44 345 610 2689"
     }
+
+
+def test_async_gsearch_no_callback():
+    async_url = "{}/async/?query=Localistico".format(SERVER_URL)
+    assert requests.get(async_url).status_code == 404
+
+
+def test_async_gsearch_no_query():
+    async_url = "{}/async/?callback_url=someurl".format(SERVER_URL)
+    resp = requests.get(async_url)
+    assert resp.status_code == 404
+
+
+def test_async_gsearch():
+    async_url = "{}/async/?query=Localistico&callback_url=someurl".format(SERVER_URL)
+    resp = requests.get(async_url)
+    assert resp.status_code == 200
+    assert 'task_id' in resp.json()

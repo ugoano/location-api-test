@@ -61,9 +61,8 @@ def async_index(request):
 
     try:
         search_task = resolve_location_async.delay(
-            callback_url=callback_url, name=query,
-            location=location_dict)
+            callback_url, query, location_dict)
         response = {'task_id': search_task.id}
     except Exception as task_error:
-        response = {'error': str(task_error)}
+        return send_404({'error': str(task_error)})
     return JsonResponse(response)

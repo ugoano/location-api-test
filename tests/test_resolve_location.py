@@ -6,6 +6,7 @@ from localistico.location import (
     resolve_location, Location, SearchError,
     google_places_search, places_search_stub_url,
     google_places_detail, places_detail_stub_url,
+    validate_response, APIError,
 )
 
 
@@ -28,12 +29,17 @@ def mock_places_detail():
 
 
 @pytest.fixture
-def mock_requests():
+def mock_response():
+    response = mock.Mock()
+    response.status_code = 200
+    response.json.return_value = {'status': "OK"}
+    return response
+
+
+@pytest.yield_fixture
+def mock_requests(mock_response):
     with mock.patch.object(location, "requests") as _requests:
-        response = mock.Mock()
-        response.status_code = 200
-        response.json.return_value = {'status': "OK"}
-        _requests.get.return_value = response
+        _requests.get.return_value = mock_response
         yield _requests
 
 
@@ -63,6 +69,25 @@ def test_google_places_detail(mock_requests):
     # Assert
     mock_requests.get.assert_called_once_with(expected_url)
 
+
+def test_validate_response(mock_response):
+    # Arrange
+    expected_response = {'status': "OK"}
+
+    # Act
+    validated_response = validate_response(mock_response)
+
+    # Assert
+    assert validated_response == expected_response
+
+
+def test_validate_response_error(mock_response):
+    # Arrange
+    mock_response.status_code = 404
+
+    # Act Assert
+    with pytest.raises(APIError):
+        validate_response(mock_response)
 
 def test_resolve_location_online():
     # Arrange
