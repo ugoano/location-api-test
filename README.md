@@ -66,3 +66,12 @@ query (required)
 callback_url (required)
 latitude (optional)
 longitude (optional)
+
+## Future
+
+I tried to balance a fine line between getting the code done and doing it right.  But here are a few notes:
+
+* Had to refamiliarise myself with Django, and had only used Celery with Flask a few years ago, so there could be better or more industry-standard ways of doing this.
+* If I had the time I would use docker to start the web server, use a web server for the `nc` listener, install the dependencies, start the Celery worker, as well as the Redis broker so that running the tests are a lot simpler.
+* I feel some more refactoring can be done in the sync-async endpoints.
+* Generated a proper API doc
