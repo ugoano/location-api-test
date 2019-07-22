@@ -18,6 +18,7 @@ def test_gsearch_valid_query():
         'international_phone_number': "+44 20 3808 1169",
     }
 
+
 def test_gsearch_invalid_query():
     query = "T" * 21
     resp = requests.get("{}?query={}".format(SERVER_URL, query))

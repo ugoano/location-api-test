@@ -2,9 +2,19 @@
 
 ## Start the web server
 
-Install redis-server either from `docker` or with `apt-get install`
+* Install redis-server either from `docker` or with `apt-get install`
 
-Change directory to `localisticoapi/`
+```
+docker run --name my-redis -d redis
+```
+
+* Change directory to `localisticoapi/`
+
+```
+cd localisticoapi
+```
+
+* Start the Django web server
 
 ```
 python manage.py runserver
