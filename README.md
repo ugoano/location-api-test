@@ -1,6 +1,6 @@
 # Localistico technical test
 
-## Start the web server
+## Server setup
 
 * Install redis-server either from `docker` or with `apt-get install`
 
@@ -18,6 +18,12 @@ docker run --name my-redis -d redis
 
 ```
 cd localisticoapi
+```
+
+* Start the Celery worker
+
+```
+celery worker -A localisticoapi --loglevel=debug
 ```
 
 * Start the Django web server

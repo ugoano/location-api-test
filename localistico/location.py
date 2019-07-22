@@ -2,7 +2,7 @@ import requests
 
 
 APIKEY = 'AIzaSyDEy58qwyPvic8sF5vlqOFFNZDgqmlS4Qw'
-places_search_stub_url = 'https://maps.googleapis.com/maps/api/place/textsearch/json?{}'
+places_search_stub_url = 'https://aps.googleapis.com/maps/api/place/textsearch/json?{}'
 places_detail_stub_url = 'https://maps.googleapis.com/maps/api/place/details/json?{}'
 
 
